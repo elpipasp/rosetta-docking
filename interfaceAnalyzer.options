@@ -1,0 +1,8 @@
+-parser:protocol docking_analysis.xml
+-use_input_sc
+-ex1
+-ex2aro
+-out:file:scorefile docking_analysis_clusters.csv
+-out:no_nstruct_label
+-out:file:score_only
+-score:weights ref2015.wts
