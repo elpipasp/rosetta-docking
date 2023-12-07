@@ -1,0 +1,2 @@
+#1)clean pdb
+/opt/software/rosetta/2021.16.61629/main/tools/protein_tools/scripts/clean_pdb.py 10A_start_AP.pdb AP
