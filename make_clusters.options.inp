@@ -6,6 +6,9 @@
 -cluster:energy_based_clustering:use_CB false
 -cluster:energy_based_clustering:cyclic false
 -cluster:energy_based_clustering:cluster_cyclic_permutations false
+-cluster:energy_based_clustering:perform_ABOXYZ_bin_analysis true
+-cluster:energy_based_clustering:prerelax
+-cluster:energy_based_clustering:relax_rounds 1
 
 #outout clusters distinguasable by names c.1.1.pdb c=cluster .1. = cluster 1 and 1. is structure 1 : naming: <cluster><cluster_number><structure>.pdb
 
@@ -14,3 +17,4 @@
 # after visualise clusters 
 
 
+# to make pdb_list: find "$(pwd)" -type f -name 'flex_tem_*.pdb' > pdb_list
