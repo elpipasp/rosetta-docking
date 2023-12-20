@@ -1,23 +1,23 @@
 <ROSETTASCRIPTS>
-	<SCOREFXNS>
-	</SCOREFXNS>
-	<TASKOPERATIONS>
-		<RestrictToInterfaceVector name="rtiv" chain1_num="1" chain2_num="1" CB_dist_cutoff="10.0" nearby_atom_cutoff="5.5" vector_angle_cutoff="75" vector_dist_cutoff="9.0" />
-	</TASKOPERATIONS>
-	<MOVERS>
-		<InterfaceAnalyzerMover name="iface_analyzer" scorefxn="REF2015" packstat="0" pack_input="0" pack_separated="1" fixedchains="P" tracer="0" />
-	</MOVERS>
-	<FILTERS>
-		<AverageDegree name="avg_degree" threshold="0" distance_threshold="10" task_operations="rtiv" />
-		<Rmsd name="rmsd" superimpose="1" threshold="2500" >
-		</Rmsd>
-	</FILTERS>
-	<APPLY_TO_POSE>
-	</APPLY_TO_POSE>
-	<PROTOCOLS>
-		<Add mover="iface_analyzer" />
-		<Add filter="avg_degree" />
-		<Add filter="rmsd" />
-	</PROTOCOLS>
-	<OUTPUT scorefxn="REF2015" />
+    <SCOREFXNS>
+        <ScoreFunction name="membrane_highres" weights="membrane_highres.wts" />
+    </SCOREFXNS>
+    <TASKOPERATIONS>
+        <RestrictToInterfaceVector name="rtiv" chain1_num="1" chain2_num="2" CB_dist_cutoff="10.0" nearby_atom_cutoff="5.5" vector_angle_cutoff="75" vector_dist_cutoff="9.0" />
+    </TASKOPERATIONS>
+    <MOVERS>
+        <InterfaceAnalyzerMover name="iface_analyzer" scorefxn="membrane_highres" interface="A_P" packstat="0" pack_input="0" pack_separated="1" tracer="0" />
+    </MOVERS>
+    <FILTERS>
+        <AverageDegree name="avg_degree" threshold="0" distance_threshold="10" task_operations="rtiv" />
+        <Rmsd name="rmsd" superimpose="1" threshold="2500" />
+    </FILTERS>
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+    <PROTOCOLS>
+        <Add mover="iface_analyzer" />
+        <Add filter="avg_degree" />
+        <Add filter="rmsd" />
+    </PROTOCOLS>
+    <OUTPUT scorefxn="membrane_highres" />
 </ROSETTASCRIPTS>
