@@ -14,6 +14,10 @@ cluster_data = defaultdict(list)
 with open(input_file_path, 'r') as input_file:
     lines = input_file.readlines()
 
+# Extract and store the header line
+header_line = lines[1]  # Assuming the header line is at index 1
+header_line = header_line.replace('\n', '')  # Remove the newline character
+
 # Initialize variables to track the current cluster
 current_cluster = None
 
@@ -27,8 +31,6 @@ for line in lines:
             if current_cluster != cluster_number:
                 current_cluster = cluster_number
                 # Include the header line in the current cluster
-                header_line_index = lines.index(line) - 1
-                header_line = lines[header_line_index]
                 cluster_data[current_cluster].append(header_line)
             cluster_data[current_cluster].append(line)
 
