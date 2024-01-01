@@ -1,4 +1,4 @@
-#plots contacts found in find_contacts.py 
+#plots contacts found in best_contacts.py 
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
