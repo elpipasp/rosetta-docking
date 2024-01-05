@@ -1,4 +1,3 @@
-#plots contacts found in best_contacts.py 
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -15,6 +14,7 @@ contact_files = ['contacts_c2.txt', 'contacts_c4.txt', 'contacts_c1.txt', 'conta
 titles = {'contacts_c2.txt': 'Cluster 2', 'contacts_c4.txt': 'Cluster 4',
           'contacts_c1.txt': 'Cluster 1', 'contacts_c5.txt': 'Cluster 5'}
 bold_residues = {23, 38, 174, 178, 280, 283, 284, 286, 290, 306, 323, 302, 102, 309, 308, 305}
+
 cbar_ticks = {
     'contacts_c2.txt': [1, 2, 3, 4, 5],
     'contacts_c4.txt': [1, 200, 400, 700, 948],
@@ -22,6 +22,12 @@ cbar_ticks = {
     'contacts_c5.txt': [1, 100, 200, 300, 400, 500, 660]
 }
 
+title_colors = {
+    'contacts_c2.txt': 'grey',
+    'contacts_c4.txt': 'cyan',
+    'contacts_c1.txt': 'forestgreen',
+    'contacts_c5.txt': 'magenta'
+}
 # Initialize dictionary for contact frequency
 contact_frequency = {cluster: defaultdict(lambda: defaultdict(int)) for cluster in contact_files}
 peptide_residues_in_contact = defaultdict(set)
@@ -59,22 +65,24 @@ for idx, (cluster_file, (matrix, peptide_residues, receptor_residues)) in enumer
     ax = fig.add_subplot(2, 2, idx+1)
     mask = matrix == 0
     heatmap = sns.heatmap(matrix, ax=ax, cmap='viridis', annot=False, mask=mask, linewidths=.5, linecolor='black', cbar_kws={'label': 'Frequency'})
-    ax.set_title(titles[cluster_file], fontweight='bold', fontsize=14)
-    ax.set_ylabel('GnRH Residues', fontweight='bold', fontsize=12) 
-    ax.set_xlabel('GnRH1R Residues', fontweight='bold', fontsize=12)
+    ax.set_title(titles[cluster_file], fontweight='bold', fontsize=18)
+    ax.set_ylabel('GnRH', fontweight='bold', fontsize=18) 
+    ax.set_xlabel('GnRH1R', fontweight='bold', fontsize=18)
     ax.set_xticks(np.arange(len(receptor_residues)) + 0.5)
     ax.set_yticks(np.arange(len(peptide_residues)) + 0.5)
 
     # Setting x-tick labels with bold residues
     xtick_labels = [f'$\\mathbf{{{residue}}}$' if residue in bold_residues else str(residue) for residue in receptor_residues]
-    ax.set_xticklabels(xtick_labels, rotation=90)
-    ax.set_yticklabels(peptide_residues)
+    ax.set_xticklabels(xtick_labels, rotation=90, fontsize=12)
+    ax.set_yticklabels(peptide_residues, fontsize=12)
+    cluster_title = titles[cluster_file]
+    ax.set_title(cluster_title, fontweight='bold', fontsize=18, color=title_colors[cluster_file])
 
     # Adjusting the colorbar to have specific ticks
     cbar = ax.collections[0].colorbar
     cbar.set_ticks(cbar_ticks[cluster_file])  # Set custom ticks for each plot
     cbar.set_ticklabels([str(tick) for tick in cbar_ticks[cluster_file]])  # Set custom tick labels
-    cbar.ax.set_ylabel('Frequency', fontweight='bold')
+    cbar.ax.set_ylabel('Frequency', fontweight='bold', fontsize=16)
 
 # Removing the extra box
     ax.spines['top'].set_visible(False)
