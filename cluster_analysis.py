@@ -17,13 +17,20 @@ def mann_whitney_test_with_effect(data1, data2):
 
 def calculate_p_values_and_effects(file_names, cluster_names, column_index, condition_column_name, condition_value, total_score_condition):
     results = {}
+    num_comparisons = len(file_names) * (len(file_names) - 1) / 2  # Total number of pairwise comparisons
     for i in range(len(file_names)):
         for j in range(i + 1, len(file_names)):
             cluster1 = load_data(file_names[i], column_index, condition_column_name, condition_value, total_score_condition)
             cluster2 = load_data(file_names[j], column_index, condition_column_name, condition_value, total_score_condition)
             p_value, effect_size = mann_whitney_test_with_effect(cluster1, cluster2)
+            
+            # Apply Bonferroni correction
+            corrected_p_value = p_value * num_comparisons
+            if corrected_p_value > 1:
+                corrected_p_value = 1.0
+            
             key = f"{cluster_names[i]} vs {cluster_names[j]}"
-            results[key] = {'p_value': p_value, 'effect_size': effect_size}
+            results[key] = {'p_value': corrected_p_value, 'effect_size': effect_size}
     return results
 
 def add_p_value_brackets(ax, x1, x2, y, p_value, effect_size, bracket_height=0.02, text_y_offset=0.1, p_fontsize=14, es_fontsize=12, es_offset=0.1):
