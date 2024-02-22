@@ -2,7 +2,7 @@
 import os
 import shutil
 
-# Target residue numbers
+#target residue numbers
 target_residues = {23, 38, 178, 174, 280, 283, 284, 286, 290, 306, 323, 302, 309, 308, 305, 102}
 
 def find_and_copy_relevant_pdbs(contact_files, source_dir, dest_dir):
@@ -33,11 +33,8 @@ def find_and_copy_relevant_pdbs(contact_files, source_dir, dest_dir):
 
     return relevant_pdbs
 
-# Parameters
 contact_files = ['contacts_c2.txt', 'contacts_c4.txt', 'contacts_c1.txt', 'contacts_c5.txt']
-source_directory = '.'  # Current directory
+source_directory = '.'  #current directory
 destination_directory = 'best_contacts'
-
-# Process the files
 relevant_pdbs = find_and_copy_relevant_pdbs(contact_files, source_directory, destination_directory)
 print(f"Copied {len(relevant_pdbs)} PDB files to {destination_directory}")
