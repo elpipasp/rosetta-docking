@@ -9,7 +9,6 @@ def count_files_in_clusters(directory_path='./', num_clusters=84):
         file_count = len(cluster_files)
         cluster_sizes[cluster_number] = file_count
 
-    # Sort clusters by file count in descending order
     sorted_clusters = sorted(cluster_sizes.items(), key=lambda x: x[1], reverse=True)
 
     with open('cluster_size.txt', 'w') as output_file:
@@ -18,6 +17,5 @@ def count_files_in_clusters(directory_path='./', num_clusters=84):
 
     print('Cluster sizes written to "cluster_size.txt".')
 
-# Example usage
-current_directory = os.getcwd()  # Get the current working directory
+current_directory = os.getcwd()  # get the current working directory
 count_files_in_clusters(current_directory, num_clusters=84)
