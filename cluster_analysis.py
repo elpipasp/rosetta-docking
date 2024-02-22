@@ -17,14 +17,14 @@ def mann_whitney_test_with_effect(data1, data2):
 
 def calculate_p_values_and_effects(file_names, cluster_names, column_index, condition_column_name, condition_value, total_score_condition):
     results = {}
-    num_comparisons = len(file_names) * (len(file_names) - 1) / 2  # Total number of pairwise comparisons
+    num_comparisons = len(file_names) * (len(file_names) - 1) / 2  #total number of pairwise comparisons
     for i in range(len(file_names)):
         for j in range(i + 1, len(file_names)):
             cluster1 = load_data(file_names[i], column_index, condition_column_name, condition_value, total_score_condition)
             cluster2 = load_data(file_names[j], column_index, condition_column_name, condition_value, total_score_condition)
             p_value, effect_size = mann_whitney_test_with_effect(cluster1, cluster2)
             
-            # Apply Bonferroni correction
+            #apply Bonferroni correction
             corrected_p_value = p_value * num_comparisons
             if corrected_p_value > 1:
                 corrected_p_value = 1.0
@@ -42,15 +42,15 @@ def add_p_value_brackets(ax, x1, x2, y, p_value, effect_size, bracket_height=0.0
 
     midpoint = (x1 + x2) / 2
 
-    # P-value above the bracket
+    #P-value above the bracket
     p_text = f"p={p_value:.2e}" if p_value < 0.001 else f"p={p_value:.4f}"
     ax.text(midpoint, y + bracket_height + text_y_offset, p_text, ha='center', va='bottom', color='black', fontsize=p_fontsize)
 
-    # ES value below the horizontal line of the bracket with additional offset
+    #ES value below the horizontal line of the bracket with additional offset
     abs_effect_size = abs(effect_size)
     es_color = 'green' if abs_effect_size >= 0.3 else 'goldenrod' if abs_effect_size >= 0.1 else 'crimson'
     es_text = f"ES={effect_size:.2f}"
-    # The ES text is placed lower by subtracting the additional es_offset
+    #ES text is placed lower by subtracting the additional es_offset
     ax.text(midpoint, y + bracket_height - (text_y_offset + es_offset), es_text, ha='center', va='top', color=es_color, fontsize=es_fontsize, fontweight='bold')
 
 file_names = ['c2.txt', 'c4.txt', 'c1.txt', 'c5.txt']
@@ -59,7 +59,6 @@ violin_width = 6
 tick_positions = [5, 15, 25, 35]
 
 fig, axes = plt.subplots(1, 3, figsize=(20, 10), sharex=True, sharey=False, gridspec_kw={'wspace': 0.5})
-
 specified_y_coordinates_plot1 = [-618, -608, -598, -588, -578, -568]
 specified_y_coordinates_plot2 = [1, 6, 10, 14, 18, 22]
 specified_y_coordinates_plot3 = [1800, 1910, 2020, 2130, 2240, 2350]
@@ -83,7 +82,6 @@ for ax, column_index, ylabel, specified_y_coordinates in zip(axes, [1, 6, 9], ["
     ax.xaxis.grid(True, linestyle='--', alpha=0.7)
     ax.set_axisbelow(True)
 
-    # Setting custom y-limits for each plot
     if ylabel == "Total Score (REU)":
         ax.set_ylim(-689, -550)
     elif ylabel == "ΔG Binding (REU)":
@@ -105,7 +103,7 @@ for ax, column_index, ylabel, specified_y_coordinates in zip(axes, [1, 6, 9], ["
             effect_size = results[key]['effect_size']
             x1, x2 = tick_positions[cluster_names.index(cluster1)], tick_positions[cluster_names.index(cluster2)]
             add_p_value_brackets(ax, x1, x2, y_coord, p_value, effect_size)
-    ax.set_xlabel('Cluster', fontsize=20, fontweight='bold', labelpad=10)  # Add x-axis label to the current
+    ax.set_xlabel('Cluster', fontsize=20, fontweight='bold', labelpad=10)
 axes[1].set_yticks([0, -5, -10, -15, -20, -25])
 axes[0].set_yticks([-620, -640, -660, -680])
 axes[2].set_yticks([1800, 1600, 1400, 1200, 1000])
