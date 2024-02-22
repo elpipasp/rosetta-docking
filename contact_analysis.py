@@ -12,7 +12,6 @@ def extract_residue_number(part):
     except ValueError:
         return None
 
-# Parameters
 contact_files = ['contacts_c2.txt', 'contacts_c4.txt', 'contacts_c1.txt', 'contacts_c5.txt']
 titles = {'contacts_c2.txt': 'Cluster 2', 'contacts_c4.txt': 'Cluster 4',
           'contacts_c1.txt': 'Cluster 1', 'contacts_c5.txt': 'Cluster 5'}
@@ -23,13 +22,13 @@ title_colors = {
     'contacts_c1.txt': 'forestgreen',
     'contacts_c5.txt': 'magenta'
 }
-# Initialize dictionaries
+#dictionaries
 contact_frequency = {cluster: defaultdict(lambda: defaultdict(int)) for cluster in contact_files}
 total_pdb_files_per_cluster = {cluster: 0 for cluster in contact_files}
 peptide_residues_in_contact = defaultdict(set)
 receptor_residues_in_contact = defaultdict(set)
 
-# Process contact files
+#process contact files
 for cluster_file in contact_files:
     with open(cluster_file, 'r') as file:
         for line in file:
@@ -46,7 +45,7 @@ for cluster_file in contact_files:
                     receptor_residues_in_contact[cluster_file].add(receptor_residue)
                     contact_frequency[cluster_file][peptide_residue][receptor_residue] += 1
 
-# Create matrices for heatmaps
+#create matrices for heatmaps
 heatmap_matrices = {}
 for cluster_file in contact_files:
     peptide_residues_sorted = sorted(peptide_residues_in_contact[cluster_file])
@@ -57,7 +56,6 @@ for cluster_file in contact_files:
             matrix[i, j] = contact_frequency[cluster_file][pep_res][rec_res]
     heatmap_matrices[cluster_file] = (matrix, peptide_residues_sorted, receptor_residues_sorted)
 
-# Define frequency bar tick values for each plot
 frequency_ticks = {
     'contacts_c2.txt': [1, 3, 5, 8, 10],
     'contacts_c4.txt': [1, 250, 550, 800, 1093],
@@ -65,17 +63,12 @@ frequency_ticks = {
     'contacts_c5.txt': [1, 200, 450, 700, 947]
 }
 
-# Plotting with specific frequency bar ticks
-fig = plt.figure(figsize=(20, 20))  # Large figure size
+#plotting
+fig = plt.figure(figsize=(20, 20)) 
 for idx, (cluster_file, (matrix, peptide_residues, receptor_residues)) in enumerate(heatmap_matrices.items()):
     ax = fig.add_subplot(2, 2, idx+1)
-    
-    # Create a custom colormap for each heatmap
     custom_cmap = mpl.colors.ListedColormap(sns.color_palette("viridis", as_cmap=True)(np.linspace(0, 1, 256)))
-    
-    # Set 0 frequency values to white in the colormap
     custom_cmap.set_under(color='white')
-    
     heatmap = sns.heatmap(matrix, ax=ax, cmap=custom_cmap, annot=False, cbar=False, linewidths=.5, linecolor='black',
                 vmin=0, vmax=total_pdb_files_per_cluster[cluster_file], mask=matrix==0)
     ax.set_title(titles[cluster_file], fontweight='bold', fontsize=14)
@@ -83,15 +76,12 @@ for idx, (cluster_file, (matrix, peptide_residues, receptor_residues)) in enumer
     ax.set_xlabel('GnRH1R', fontweight='bold', fontsize=14)
     ax.set_xticks(np.arange(len(receptor_residues)) + 0.5)
     ax.set_yticks(np.arange(len(peptide_residues)) + 0.5)
-
-    # Setting x-tick labels with bold residues
     xtick_labels = [f'$\\mathbf{{{residue}}}$' if residue in bold_residues else str(residue) for residue in receptor_residues]
     ax.set_xticklabels(xtick_labels, rotation=90, fontsize=12)
     ax.set_yticklabels(peptide_residues, fontsize=12)
     cluster_title = titles[cluster_file]
     ax.set_title(cluster_title, fontweight='bold', fontsize=14, color=title_colors[cluster_file])
-  
-    # Annotate boxes with frequency < 100 and rotate by 90 degrees for frequency > 100
+
     for i in range(len(peptide_residues)):
         for j in range(len(receptor_residues)):
             value = contact_frequency[cluster_file][peptide_residues[i]][receptor_residues[j]]
@@ -102,13 +92,11 @@ for idx, (cluster_file, (matrix, peptide_residues, receptor_residues)) in enumer
             elif value > 600:
                 ax.text(j + 0.5, i + 0.5, str(value), ha='center', va='center', color='white', fontsize=8, fontweight='bold', rotation=90)
 
-    # Removing the extra box
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(True)
     ax.spines['bottom'].set_visible(True)
     ax.spines['left'].set_visible(False)
     
-    # Adding a custom colorbar to each plot with specified frequency ticks
     max_freq = total_pdb_files_per_cluster[cluster_file]
     sm = ScalarMappable(cmap=custom_cmap, norm=plt.Normalize(vmin=0, vmax=max_freq))
     sm.set_array([])
@@ -116,6 +104,5 @@ for idx, (cluster_file, (matrix, peptide_residues, receptor_residues)) in enumer
     cax = divider.append_axes("right", size="2.5%", pad=0.04)
     cbar = plt.colorbar(sm, cax=cax, ticks=frequency_ticks[cluster_file])
     cbar.set_label('Population', fontweight='bold', fontsize=12)
-
 plt.subplots_adjust(hspace=0.5, wspace=0.2)
 plt.show()
