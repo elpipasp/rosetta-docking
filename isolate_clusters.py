@@ -1,4 +1,4 @@
-#Isolate structures of best clusters that satisfly the conditions <-620, <0
+#isolate structures of best clusters that satisfly the conditions <-620, <0
 import os
 import pandas as pd
 import shutil
@@ -30,9 +30,8 @@ def copy_pdb_files(data_files, source_directory, destination_directory, total_sc
     for data_file, count in count_dict.items():
         print(f"Copied {count} structures from {data_file}")
 
-# Parameters
 data_files = ['c2.txt', 'c4.txt', 'c1.txt', 'c5.txt']
-source_directory = '.'  # Current directory
+source_directory = '.' 
 destination_directory = 'best_clusters'
 total_score_index = 1
 dg_separated_index = 6
